@@ -1,27 +1,24 @@
 from flask import Flask, render_template, redirect, abort, request
 from data import db_session
 from data.users import User
-from data.news import News
+from data.games import Games
 from forms.user import RegisterForm
-from forms.news import NewsForm
+from forms.games import GamesForm
 from forms.login_form import LoginForm
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
+from werkzeug.utils import secure_filename
 
 login_manager = LoginManager()
 app = Flask(__name__)
 login_manager.init_app(app)
-app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
+app.config['SECRET_KEY'] = 'lJihdIUh12eIHUI34'
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1000 * 1000
 
 
 @app.route("/")
 def index():
     db_sess = db_session.create_session()
-    news = db_sess.query(News).filter(News.is_private != True)
-    if current_user.is_authenticated:
-        news = db_sess.query(News).filter(
-            (News.user == current_user) | (News.is_private != True))
-    else:
-        news = db_sess.query(News).filter(News.is_private != True)
+    news = db_sess.query(Games)
     return render_template("index.html", news=news)
 
 
@@ -53,13 +50,12 @@ def reqister():
 @app.route('/news',  methods=['GET', 'POST'])
 @login_required
 def add_news():
-    form = NewsForm()
+    form = GamesForm()
     if form.validate_on_submit():
         db_sess = db_session.create_session()
-        news = News()
+        news = Games()
         news.title = form.title.data
         news.content = form.content.data
-        news.is_private = form.is_private.data
         current_user.news.append(news)
         db_sess.merge(current_user)
         db_sess.commit()
@@ -86,27 +82,25 @@ def login():
 @app.route('/news/<int:id>', methods=['GET', 'POST'])
 @login_required
 def edit_news(id):
-    form = NewsForm()
+    form = GamesForm()
     if request.method == "GET":
         db_sess = db_session.create_session()
-        news = db_sess.query(News).filter(News.id == id,
-                                          News.user == current_user
-                                          ).first()
+        news = db_sess.query(Games).filter(Games.id == id,
+                                           Games.user == current_user
+                                           ).first()
         if news:
             form.title.data = news.title
             form.content.data = news.content
-            form.is_private.data = news.is_private
         else:
             abort(404)
     if form.validate_on_submit():
         db_sess = db_session.create_session()
-        news = db_sess.query(News).filter(News.id == id,
-                                          News.user == current_user
-                                          ).first()
+        news = db_sess.query(Games).filter(Games.id == id,
+                                           Games.user == current_user
+                                           ).first()
         if news:
             news.title = form.title.data
             news.content = form.content.data
-            news.is_private = form.is_private.data
             db_sess.commit()
             return redirect('/')
         else:
@@ -115,6 +109,20 @@ def edit_news(id):
                            title='Редактирование новости',
                            form=form
                            )
+
+
+@app.route('/news_delete/<int:id>', methods=['GET'])
+@login_required
+def delete_news(id):
+    form = GamesForm()
+    db_sess = db_session.create_session()
+    news = db_sess.query(Games).filter(Games.id == id, Games.user == current_user).first()
+    if news:
+        db_sess.delete(news)
+        db_sess.commit()
+        return redirect('/')
+    else:
+        abort(404)
 
 
 @login_manager.user_loader
