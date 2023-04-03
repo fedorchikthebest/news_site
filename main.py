@@ -6,13 +6,13 @@ from forms.user import RegisterForm
 from forms.games import GamesForm
 from forms.login_form import LoginForm
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
-from werkzeug.utils import secure_filename
 
 login_manager = LoginManager()
 app = Flask(__name__)
 login_manager.init_app(app)
 app.config['SECRET_KEY'] = 'lJihdIUh12eIHUI34'
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1000 * 1000
+app.config['UPLOAD_FOLDER'] = './static/torrents'
 
 
 @app.route("/")
