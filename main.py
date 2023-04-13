@@ -59,9 +59,22 @@ def add_news():
         current_user.news.append(news)
         db_sess.merge(current_user)
         db_sess.commit()
-        return redirect('/')
+        return redirect(f'/load_files{current_user.id}')
     return render_template('news.html', title='Добавление новости',
                            form=form)
+
+
+@app.route('/load_files<int:id>',  methods=['GET', 'POST'])
+@login_required
+def load_file(id):
+    if request.method == 'POST':
+        db_sess = db_session.create_session()
+        news = db_sess.query(Games).filter(Games.id == id, Games.user == current_user).first()
+        news.immage = request.files['immage'].read()
+        news.torrent = request.files['torrent'].read()
+        db_sess.merge(news)
+        return redirect('/')
+    return render_template('load_file.html')
 
 
 @app.route('/login', methods=['GET', 'POST'])

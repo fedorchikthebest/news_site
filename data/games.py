@@ -17,5 +17,7 @@ class Games(SqlAlchemyBase):
     user_id = sqlalchemy.Column(sqlalchemy.Integer,
                                 sqlalchemy.ForeignKey("users.id"))
 
-    file_link = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    immage = sqlalchemy.Column(sqlalchemy.BLOB, nullable=True)
+    torrent = sqlalchemy.Column(sqlalchemy.BLOB, nullable=True)
+
     user = orm.relationship('User')
