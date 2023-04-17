@@ -143,7 +143,7 @@ def delete_news(id):
 def render_game(id):
     form = GamesForm()
     db_sess = db_session.create_session()
-    news = db_sess.query(Games).filter(Games.id == id, Games.user == current_user).first()
+    news = db_sess.query(Games).filter(Games.id == id).first()
     with open(f'./static/img/{id}.png', 'wb') as f:
         f.write(news.immage)
     with open(f'./static/torrents/{id}.torrent', 'wb') as f:
