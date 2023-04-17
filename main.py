@@ -6,13 +6,13 @@ from forms.user import RegisterForm
 from forms.games import GamesForm
 from forms.login_form import LoginForm
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
+import os
 
 login_manager = LoginManager()
 app = Flask(__name__)
 login_manager.init_app(app)
 app.config['SECRET_KEY'] = 'lJihdIUh12eIHUI34'
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1000 * 1000
-app.config['UPLOAD_FOLDER'] = './static/torrents'
 
 
 @app.route("/")
@@ -170,7 +170,8 @@ def logout():
 
 def main():
     db_session.global_init("db/blogs.db")
-    app.run()
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
 
 
 if __name__ == '__main__':
