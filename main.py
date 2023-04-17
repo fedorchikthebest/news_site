@@ -140,7 +140,6 @@ def delete_news(id):
 
 
 @app.route('/game/<int:id>', methods=['GET'])
-@login_required
 def render_game(id):
     form = GamesForm()
     db_sess = db_session.create_session()
