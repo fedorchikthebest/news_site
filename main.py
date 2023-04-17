@@ -59,12 +59,12 @@ def add_news():
         current_user.news.append(news)
         db_sess.merge(current_user)
         db_sess.commit()
-        return redirect(f'/load_files{current_user.id}')
+        return redirect(f'/load_files/{current_user.id}')
     return render_template('news.html', title='Добавление новости',
                            form=form)
 
 
-@app.route('/load_files<int:id>',  methods=['GET', 'POST'])
+@app.route('/load_files/<int:id>',  methods=['GET', 'POST'])
 @login_required
 def load_file(id):
     if request.method == 'POST':
@@ -73,6 +73,7 @@ def load_file(id):
         news.immage = request.files['immage'].read()
         news.torrent = request.files['torrent'].read()
         db_sess.merge(news)
+        db_sess.commit()
         return redirect('/')
     return render_template('load_file.html')
 
@@ -115,7 +116,7 @@ def edit_news(id):
             news.title = form.title.data
             news.content = form.content.data
             db_sess.commit()
-            return redirect('/')
+            return redirect(f'/load_files/{id}')
         else:
             abort(404)
     return render_template('news.html',
@@ -134,6 +135,22 @@ def delete_news(id):
         db_sess.delete(news)
         db_sess.commit()
         return redirect('/')
+    else:
+        abort(404)
+
+
+@app.route('/game/<int:id>', methods=['GET'])
+@login_required
+def render_game(id):
+    form = GamesForm()
+    db_sess = db_session.create_session()
+    news = db_sess.query(Games).filter(Games.id == id, Games.user == current_user).first()
+    with open(f'./static/img/{id}.png', 'wb') as f:
+        f.write(news.immage)
+    with open(f'./static/torrents/{id}.torrent', 'wb') as f:
+        f.write(news.torrent)
+    if news:
+        return render_template('game.html', data=news)
     else:
         abort(404)
 
