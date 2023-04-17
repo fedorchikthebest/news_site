@@ -145,9 +145,11 @@ def render_game(id):
     db_sess = db_session.create_session()
     news = db_sess.query(Games).filter(Games.id == id).first()
     with open(f'./static/img/{id}.png', 'wb') as f:
-        f.write(news.immage)
+        if news.immage is not None:
+            f.write(news.immage)
     with open(f'./static/torrents/{id}.torrent', 'wb') as f:
-        f.write(news.torrent)
+        if news.torrent is not None:
+            f.write(news.torrent)
     if news:
         return render_template('game.html', data=news)
     else:
