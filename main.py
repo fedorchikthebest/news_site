@@ -144,6 +144,8 @@ def render_game(id):
     form = GamesForm()
     db_sess = db_session.create_session()
     news = db_sess.query(Games).filter(Games.id == id).first()
+    if not news:
+        abort(404)
     with open(f'./static/img/{id}.png', 'wb') as f:
         if news.immage is not None:
             f.write(news.immage)
