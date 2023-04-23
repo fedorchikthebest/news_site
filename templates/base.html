@@ -1,6 +1,18 @@
+
 <!doctype html>
-<html lang="en">
-<head>
+<style>
+  body{height:100%;
+   width:100%;
+   background-image:url(static/img/image.jpg);
+   background-repeat:no-repeat;
+   background-size:cover;
+
+   filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='static/img/image.jpg',sizingMethod='scale');
+   -ms-filter:"progid:DXImageTransform.Microsoft.AlphaImageLoader(src='static/img/image.jpg',sizingMethod='scale')";
+}
+</style><html lang="en">
+
+    <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet"
@@ -9,7 +21,10 @@
           crossorigin="anonymous">
     <title>{{title}}</title>
 </head>
+
+<font face="Comic Sans MS" color="#ccff00">
 <body>
+
 <header>
     <nav class="navbar navbar-light bg-light">
         <a class="navbar-brand" href="#">Наше приложение</a>
@@ -28,4 +43,5 @@
     {% block content %}{% endblock %}
 </main>
 </body>
+</font>
 </html>

@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>Записи в блоге</h1>
+<h1>Игры</h1>
 {% if current_user.is_authenticated %}
-<a href="news" class="btn btn-secondary">Добавить новость</a>
+<a href="news" class="btn btn-secondary">Добавить игру</a>
 {% endif %}
 {% for item in news%}
 <div class="col-md6 border rounded">
@@ -21,7 +21,7 @@
     </div>
 {% endif %}
     <div>
-        Автор - {{item.user.name}}, Дата написания - {{item.created_date}}
+        Пользователь - {{item.user.name}}, Дата написания - {{item.created_date}}
     </div>
 </div>
 {% endfor %}

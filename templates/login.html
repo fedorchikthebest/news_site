@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
+<font face="Comic Sans MS">
     <h1>Авторизация</h1>
     <form action="" method="post">
         {{ form.hidden_tag() }}
@@ -26,4 +27,16 @@
         <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
         <div>{{ message }}</div>
     </form>
+   <style>
+  body{height:100%;
+   width:100%;
+   background-image:url(static/img/image.jpg);
+   background-repeat:no-repeat;
+   background-size:cover;
+
+   filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='static/img/image.jpg',sizingMethod='scale');
+   -ms-filter:"progid:DXImageTransform.Microsoft.AlphaImageLoader(src='static/img/image.jpg',sizingMethod='scale')";
+}
+</style>
+</font>
 {% endblock %}

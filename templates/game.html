@@ -1,9 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
+<font face="Comic Sans MS">
 <head>
     <h1>{{ data.title }}</h1>
     <img src="/static/img/{{ data.id }}.png">
     <div>{{ data.content }}</div>
     <a href="/static/torrents/{{ data.id }}.torrent"><h2>Скачать</h2></a>
 </head>
+<body><font size="32" color="#1f75fe">Комментарии пользователей:</font>
+<a href="http://90.156.210.42:5001"></a>
+{% for i in comments %}
+        <h1>Пользователь: {{ i[0] }}</h1>
+        <h1> комментарий: {{ i[1] }}</h1>
+        <h1></h1>
+        <font size="32" color="#1f75fe">---------------------------------</font>
+        <h1></h1>
+    {% endfor %}
+</body>
+</font>
 </html>

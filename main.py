@@ -7,6 +7,7 @@ from forms.games import GamesForm
 from forms.login_form import LoginForm
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 import os
+import requests
 
 login_manager = LoginManager()
 app = Flask(__name__)
@@ -47,7 +48,7 @@ def reqister():
     return render_template('register.html', title='Регистрация', form=form)
 
 
-@app.route('/news',  methods=['GET', 'POST'])
+@app.route('/news', methods=['GET', 'POST'])
 @login_required
 def add_news():
     form = GamesForm()
@@ -64,7 +65,7 @@ def add_news():
                            form=form)
 
 
-@app.route('/load_files/<int:id>',  methods=['GET', 'POST'])
+@app.route('/load_files/<int:id>', methods=['GET', 'POST'])
 @login_required
 def load_file(id):
     if request.method == 'POST':
@@ -144,6 +145,10 @@ def render_game(id):
     form = GamesForm()
     db_sess = db_session.create_session()
     news = db_sess.query(Games).filter(Games.id == id).first()
+    comments = requests.get(f'http://127.0.0.1:5001/api/{id}').json()
+    comments_2 = []
+    for i in comments:
+        comments_2.append([list(i.keys())[0], list(i.values())[0]])
     if not news:
         abort(404)
     with open(f'./static/img/{id}.png', 'wb') as f:
@@ -153,7 +158,7 @@ def render_game(id):
         if news.torrent is not None:
             f.write(news.torrent)
     if news:
-        return render_template('game.html', data=news)
+        return render_template('game.html', data=news, comments=comments_2)
     else:
         abort(404)
 
