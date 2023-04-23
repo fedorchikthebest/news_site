@@ -61,7 +61,7 @@ def add_news():
         db_sess.merge(current_user)
         db_sess.commit()
         return redirect(f'/load_files/{current_user.id}')
-    return render_template('news.html', title='Добавление новости',
+    return render_template('news.html', title='Добавление игры',
                            form=form)
 
 
@@ -121,7 +121,7 @@ def edit_news(id):
         else:
             abort(404)
     return render_template('news.html',
-                           title='Редактирование новости',
+                           title='Редактирование игры',
                            form=form
                            )
 
