@@ -145,7 +145,7 @@ def render_game(id):
     form = GamesForm()
     db_sess = db_session.create_session()
     news = db_sess.query(Games).filter(Games.id == id).first()
-    comments = requests.get(f'http://127.0.0.1:5001/api/{id}').json()
+    comments = requests.get(f'http://90.156.210.42:5001/api/{id}').json()
     comments_2 = []
     for i in comments:
         comments_2.append([list(i.keys())[0], list(i.values())[0]])
