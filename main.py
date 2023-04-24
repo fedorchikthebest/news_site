@@ -14,6 +14,7 @@ app = Flask(__name__)
 login_manager.init_app(app)
 app.config['SECRET_KEY'] = 'lJihdIUh12eIHUI34'
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1000 * 1000
+packets_pull = {}
 
 
 @app.route("/")
@@ -51,17 +52,10 @@ def reqister():
 @app.route('/games', methods=['GET', 'POST'])
 @login_required
 def add_news():
+    global packets_pull
     form = GamesForm()
     if form.validate_on_submit():
-        db_sess = db_session.create_session()
-        news = Games()
-        news.title = form.title.data
-        news.content = form.content.data
-        news.immage = b'1'
-        news.torrent = b'1'
-        current_user.news.append(news)
-        db_sess.merge(current_user)
-        db_sess.commit()
+        packets_pull[str(current_user.id)] = [form.title.data, form.content.data]
         return redirect(f'/load_files/{current_user.id}')
     return render_template('news.html', title='Добавление игры',
                            form=form)
@@ -80,15 +74,18 @@ def page_not_found(e):
 @app.route('/load_files/<int:id>', methods=['GET', 'POST'])
 @login_required
 def load_file(id):
+    global packets_pull
     db_sess = db_session.create_session()
-    news = db_sess.query(Games).filter(Games.id == id, Games.user == current_user).first()
-    if not news:
-        return abort(404)
     if request.method == 'POST':
+        news = Games()
+        news.title = packets_pull[str(id)][0]
+        news.content = packets_pull[str(id)][1]
         news.immage = request.files['immage'].read()
         news.torrent = request.files['torrent'].read()
-        db_sess.merge(news)
+        current_user.news.append(news)
+        db_sess.merge(current_user)
         db_sess.commit()
+        del packets_pull[str(id)]
         return redirect('/')
     return render_template('load_file.html')
 
