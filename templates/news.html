@@ -1,17 +1,12 @@
 {% extends "base.html" %}
 
 {% block content %}
-<font face="Comic Sans MS">
 <h1>Добавление игры</h1>
 <style>
-  body{height:100%;
-   width:100%;
+  body{
    background-image:url(static/img/image.jpg);
-   background-repeat:no-repeat;
-   background-size:cover;
 
-   filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='static/img/image.jpg',sizingMethod='scale');
-   -ms-filter:"progid:DXImageTransform.Microsoft.AlphaImageLoader(src='static/img/image.jpg',sizingMethod='scale')";
+   background: url(static/img/im age.jpg);
 }
 </style>
 <form action="" method="post">
@@ -36,5 +31,5 @@
     </p>
     <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
     {{message}}
-</form></font>
+</form>
 {% endblock %}
