@@ -78,12 +78,35 @@ def load_file(id):
     db_sess = db_session.create_session()
     if request.method == 'POST':
         news = Games()
+        if len(packets_pull[str(id)]) != 2:
+            abort(404)
         news.title = packets_pull[str(id)][0]
         news.content = packets_pull[str(id)][1]
         news.immage = request.files['immage'].read()
         news.torrent = request.files['torrent'].read()
         current_user.news.append(news)
         db_sess.merge(current_user)
+        db_sess.commit()
+        del packets_pull[str(id)]
+        return redirect('/')
+    return render_template('load_file.html')
+
+
+@app.route('/edit_files/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit_file(id):
+    global packets_pull
+    db_sess = db_session.create_session()
+    if request.method == 'POST':
+        news = db_sess.query(Games).filter(Games.id == id,
+                                           Games.user == current_user
+                                           ).first()
+        if not news:
+            abort(404)
+        news.title = packets_pull[str(id)][0]
+        news.content = packets_pull[str(id)][1]
+        news.immage = request.files['immage'].read()
+        news.torrent = request.files['torrent'].read()
         db_sess.commit()
         del packets_pull[str(id)]
         return redirect('/')
@@ -108,6 +131,7 @@ def login():
 @app.route('/games/<int:id>', methods=['GET', 'POST'])
 @login_required
 def edit_news(id):
+    global packets_pull
     form = GamesForm()
     if request.method == "GET":
         db_sess = db_session.create_session()
@@ -126,10 +150,9 @@ def edit_news(id):
                                            Games.user == current_user
                                            ).first()
         if news:
-            news.title = form.title.data
-            news.content = form.content.data
+            packets_pull[str(id)] = [str(form.title.data), str(form.content.data)]
             db_sess.commit()
-            return redirect(f'/load_files/{id}')
+            return redirect(f'/edit_files/{id}')
         else:
             return abort(404)
     return render_template('news.html',
