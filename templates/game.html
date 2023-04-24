@@ -1,6 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<font size="5" face="Times New Roman">
+{% extends "base.html" %}
+{% block content %}
 <head>
     <h1>{{ data.title }}</h1>
     <img src="/static/img/{{ data.id }}.png">
@@ -17,5 +16,5 @@
         <h1></h1>
     {% endfor %}
 </body>
-</font>
 </html>
+{% endblock %}

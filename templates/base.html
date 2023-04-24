@@ -1,13 +1,5 @@
 
 <!doctype html>
-<font size="5" face="Times New Roman">
-<style>
-  body{
-   background-image:url(static/img/image.jpg);
-
-   background: url(static/img/im age.jpg);
-}
-</style>
 <html lang="en">
     <head>
     <meta charset="utf-8">
@@ -22,9 +14,9 @@
 
 <header>
     <nav class="navbar navbar-light bg-light">
-        <a class="navbar-brand" href="#">Магазин пиратских игр</a>
+        <a class="navbar-brand" href="/">Магазин пиратских игр</a>
         {% if current_user.is_authenticated %}
-    <a class="navbar-brand" href="/logout">{{ current_user.name }}</a>
+    <a class="navbar-brand" href="/logout">Выйти</a>
 {% else %}
     <p>
         <a class="btn btn-primary " href="/register">Зарегистрироваться</a>
@@ -38,5 +30,5 @@
     {% block content %}{% endblock %}
 </main>
 </body>
-</font>
+
 </html>

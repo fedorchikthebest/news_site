@@ -57,6 +57,8 @@ def add_news():
         news = Games()
         news.title = form.title.data
         news.content = form.content.data
+        news.immage = b'1'
+        news.torrent = b'1'
         current_user.news.append(news)
         db_sess.merge(current_user)
         db_sess.commit()
@@ -68,9 +70,11 @@ def add_news():
 @app.route('/load_files/<int:id>', methods=['GET', 'POST'])
 @login_required
 def load_file(id):
+    db_sess = db_session.create_session()
+    news = db_sess.query(Games).filter(Games.id == id, Games.user == current_user).first()
+    if not news:
+        return abort(404)
     if request.method == 'POST':
-        db_sess = db_session.create_session()
-        news = db_sess.query(Games).filter(Games.id == id, Games.user == current_user).first()
         news.immage = request.files['immage'].read()
         news.torrent = request.files['torrent'].read()
         db_sess.merge(news)
@@ -107,7 +111,8 @@ def edit_news(id):
             form.title.data = news.title
             form.content.data = news.content
         else:
-            abort(404)
+            return abort(404)
+
     if form.validate_on_submit():
         db_sess = db_session.create_session()
         news = db_sess.query(Games).filter(Games.id == id,
@@ -119,7 +124,7 @@ def edit_news(id):
             db_sess.commit()
             return redirect(f'/load_files/{id}')
         else:
-            abort(404)
+            return abort(404)
     return render_template('news.html',
                            title='Редактирование игры',
                            form=form
@@ -137,7 +142,7 @@ def delete_news(id):
         db_sess.commit()
         return redirect('/')
     else:
-        abort(404)
+        return abort(404)
 
 
 @app.route('/game/<int:id>', methods=['GET'])
@@ -150,7 +155,7 @@ def render_game(id):
     for i in comments:
         comments_2.append([list(i.keys())[0], list(i.values())[0]])
     if not news:
-        abort(404)
+        return abort(404)
     with open(f'./static/img/{id}.png', 'wb') as f:
         if news.immage is not None:
             f.write(news.immage)
@@ -160,7 +165,7 @@ def render_game(id):
     if news:
         return render_template('game.html', data=news, comments=comments_2)
     else:
-        abort(404)
+        return abort(404)
 
 
 @login_manager.user_loader

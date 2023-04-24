@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 
 {% block content %}
-<font size="5" face="Times New Roman">
     <h1>Регистрация</h1>
 <form action="" method="post">
     {{ form.hidden_tag() }}
@@ -52,5 +51,5 @@
     </p>
     <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
     {{message}}
-</form></font>
+</form>
 {% endblock %}
