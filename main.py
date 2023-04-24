@@ -130,7 +130,7 @@ def login():
 
 @app.route('/games/<int:id>', methods=['GET', 'POST'])
 @login_required
-def edit_news(id):
+def edit_games(id):
     global packets_pull
     form = GamesForm()
     if request.method == "GET":
@@ -163,7 +163,7 @@ def edit_news(id):
 
 @app.route('/games_delete/<int:id>', methods=['GET'])
 @login_required
-def delete_news(id):
+def delete_games(id):
     form = GamesForm()
     db_sess = db_session.create_session()
     news = db_sess.query(Games).filter(Games.id == id, Games.user == current_user).first()
