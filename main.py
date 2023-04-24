@@ -48,7 +48,7 @@ def reqister():
     return render_template('register.html', title='Регистрация', form=form)
 
 
-@app.route('/news', methods=['GET', 'POST'])
+@app.route('/games', methods=['GET', 'POST'])
 @login_required
 def add_news():
     form = GamesForm()
@@ -65,6 +65,16 @@ def add_news():
         return redirect(f'/load_files/{current_user.id}')
     return render_template('news.html', title='Добавление игры',
                            form=form)
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
+
+
+@app.errorhandler(500)
+def page_not_found(e):
+    return render_template('404.html'), 500
 
 
 @app.route('/load_files/<int:id>', methods=['GET', 'POST'])
@@ -98,7 +108,7 @@ def login():
     return render_template('login.html', title='Авторизация', form=form)
 
 
-@app.route('/news/<int:id>', methods=['GET', 'POST'])
+@app.route('/games/<int:id>', methods=['GET', 'POST'])
 @login_required
 def edit_news(id):
     form = GamesForm()
@@ -131,7 +141,7 @@ def edit_news(id):
                            )
 
 
-@app.route('/news_delete/<int:id>', methods=['GET'])
+@app.route('/games_delete/<int:id>', methods=['GET'])
 @login_required
 def delete_news(id):
     form = GamesForm()
