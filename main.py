@@ -68,7 +68,7 @@ def page_not_found(e):
 
 @app.errorhandler(500)
 def page_not_found(e):
-    return render_template('404.html'), 500
+    return render_template('500.html'), 500
 
 
 @app.route('/load_files/<int:id>', methods=['GET', 'POST'])
@@ -180,7 +180,10 @@ def render_game(id):
     form = GamesForm()
     db_sess = db_session.create_session()
     news = db_sess.query(Games).filter(Games.id == id).first()
-    comments = requests.get(f'http://92.51.38.221:5000/api/{id}').json()
+    try:
+        comments = requests.get(f'http://92.51.38.221:5000/api/{id}').json()
+    except requests.exceptions.ConnectionError:
+        comments = [{'сервер': 'АПИ не доступно'}]
     comments_2 = []
     for i in comments:
         comments_2.append([list(i.keys())[0], list(i.values())[0]])
